@@ -41,10 +41,10 @@ for epoch in range(epochs):
                     t.append(-1)
             t = np.array(t)
             t = t.reshape(10, 1)
-            delta += np.dot(t - z, np.transpose(x_in[index])) * learning_rate
-            beta += (t - z) * learning_rate
-        W += delta
-        bias += beta
+            delta += np.dot(z - t, np.transpose(x_in[index]))
+            beta += (z - t)
+        W -= delta * learning_rate
+        bias -= beta * learning_rate
     rate = 0
     for example in range(len(test_in)):
         z = np.dot(W, test_in[example]) + bias

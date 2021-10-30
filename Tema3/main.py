@@ -7,7 +7,7 @@ batch_size = 10
 input_layer_size = 784
 hidden_layer_size = 100
 output_layer_size = 10
-learning_rate = 0.001
+learning_rate = 0.03
 
 with gzip.open('mnist.pkl.gz', 'rb') as fd:
     train_set, valid_set, test_set = pickle.load(fd, encoding='latin')
@@ -67,7 +67,7 @@ for epoch in range(epochs):
             xl3 = np.copy(y)
             t = np.zeros((output_layer_size, 1))
             t[x_label[index]] = 1
-            error_l3 = xl3 - t
+            error_l3 = (xl3 - t)
             deltal2 += np.dot(error_l3, xl2.T)
             betal2 += error_l3
             error_l2 = np.dot(np.dot(xl2, (1 - xl2).T), np.dot(wl2.T, error_l3))
