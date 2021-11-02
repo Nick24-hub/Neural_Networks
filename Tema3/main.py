@@ -7,9 +7,9 @@ batch_size = 10
 input_layer_size = 784
 hidden_layer_size = 100
 output_layer_size = 10
-learning_rate = 0.03
-regularization = 0
-momentum = 0
+learning_rate = 0.01
+regularization = 0.1
+momentum = 0.9
 
 with gzip.open('mnist.pkl.gz', 'rb') as fd:
     train_set, valid_set, test_set = pickle.load(fd, encoding='latin')
@@ -57,6 +57,9 @@ def softmax(x):
 
 
 for epoch in range(epochs):
+    p = np.random.permutation(len(x_in))
+    x_in = x_in[p]
+    x_label = x_label[p]
     print("Epoch", epoch + 1)
     for batch in range(len(x_in) // batch_size):
         deltal1 = np.zeros((hidden_layer_size, input_layer_size))
@@ -74,19 +77,23 @@ for epoch in range(epochs):
             z = np.dot(wl2, xl2) + bl2
             y = softmax(z)
             xl3 = np.copy(y)
+            # initialize t
             t = np.zeros((output_layer_size, 1))
             t[x_label[index]][0] = 1
+            # backpropagation
+            # output layer error
             error_l3 = xl3 - t
             deltal2 += np.dot(error_l3, xl2.T)
             betal2 += error_l3
-            error_l2 = np.dot(np.dot(xl2, (1 - xl2).T), np.dot(wl2.T, error_l3))
+            # hidden layer error
+            error_l2 = (xl2 * (1 - xl2)) * np.dot(wl2.T, error_l3)
             deltal1 += np.dot(error_l2, xl1.T)
             betal1 += error_l2
         vl1 = momentum * vl1 - deltal1 * learning_rate / batch_size
-        wl1 = (1 - regularization * learning_rate / batch_size) * wl1 + vl1
+        wl1 = (1 - regularization * learning_rate / len(x_in)) * wl1 + vl1
         bl1 -= betal1 * learning_rate / batch_size
         vl2 = momentum * vl2 - deltal2 * learning_rate / batch_size
-        wl2 = (1 - regularization * learning_rate / batch_size) * wl2 + vl2
+        wl2 = (1 - regularization * learning_rate / len(x_in)) * wl2 + vl2
         bl2 -= betal2 * learning_rate / batch_size
     count = 0
     for example in range(len(test_in)):
