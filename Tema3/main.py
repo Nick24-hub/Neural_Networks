@@ -2,7 +2,7 @@ import gzip
 import pickle
 import numpy as np
 
-epochs = 30
+epochs = 15
 batch_size = 10
 input_layer_size = 784
 hidden_layer_size = 100
@@ -17,10 +17,6 @@ with gzip.open('mnist.pkl.gz', 'rb') as fd:
 x_in = np.asarray(train_set[0])
 x_in = x_in.reshape((len(x_in), input_layer_size, 1))
 x_label = np.asarray(train_set[1])
-
-p = np.random.permutation(len(x_in))
-x_in = x_in[p]
-x_label = x_label[p]
 
 test_in = np.asarray(test_set[0])
 test_in = test_in.reshape((len(test_in), input_layer_size, 1))
