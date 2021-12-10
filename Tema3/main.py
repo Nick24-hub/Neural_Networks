@@ -100,5 +100,5 @@ for epoch in range(epochs):
         result = np.argmax(y)
         if result == test_label[example]:
             count = count + 1
-    acuracy = count * 100 / len(test_in)
-    print("Acuracy:", acuracy)
+    accuracy = count * 100 / len(test_in)
+    print("Accuracy:", accuracy)
